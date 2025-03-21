@@ -1,0 +1,42 @@
+cython
+ninja
+pillow
+pybind11
+scikit-image
+setuptools
+tqdm
+jsons
+pysimdjson
+unittest
+
+
+
+# # For linting / code auto-formatting inside vscode (or other IDE). Should be fine to leave in, these
+# # are small dependencies, but also fine to remove when submiting an analytic:
+black>=19.3
+#flake8
+isort
+#isort==4.3.21 # Version works with nbextensions.
+ruff
+
+# For notebooks / plotting:
+ipython
+# # jupyter-contrib-nbextensions No longer works with jupyter-labn
+# git+https://github.com/ipython-contrib/jupyter_contrib_nbextensions.git
+# See here instead: https://jupyterlab-contrib.github.io/migrate_from_classical.html
+jupyterlab
+matplotlib
+# nb-black
+nbconvert
+nbformat
+numpy
+pandas[performance,plot,output-formatting]
+pandas-read-xml
+pandoc
+polars
+seaborn
+jupyterlab_code_formatter
+jupyterlab-lsp
+python-lsp-server[all]
+jlab-enhanced-cell-toolbar
+jupyterlab-snippets
