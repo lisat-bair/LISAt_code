@@ -3,7 +3,7 @@ import os
 import sys
 
 import torch
-from model.SESAME import init_SESAME_model
+from model.LISAT import init_LISAT_model
 
 
 def parse_args(args):
@@ -25,7 +25,7 @@ def parse_args(args):
     parser.add_argument("--image_size", default=1024, type=int, help="image size")
     parser.add_argument("--model_max_length", default=512, type=int)
     parser.add_argument(
-        "--vision-tower", default="/home/patrickwu/Geo-LLaVA/scripts/remote_clip_vit_l_14", type=str
+        "--vision-tower", default="./remote_clip_vit_l_14", type=str
     )
     parser.add_argument("--lora_r", default=8, type=int)
     parser.add_argument("--lora_alpha", default=16, type=int)
@@ -41,7 +41,7 @@ def parse_args(args):
         choices=["llava_v1", "llava_llama_2"],
     )
     parser.add_argument("--weight", default="", type=str, required=True)
-    parser.add_argument("--save_path", default="./sesame_bagel", type=str, required=True)
+    parser.add_argument("--save_path", default="./lisat_bagel", type=str, required=True)
     return parser.parse_args(args)
 
 
@@ -53,7 +53,7 @@ def main(args):
         "train_mask_decoder": args.train_mask_decoder,
         "out_dim": args.out_dim,
     }
-    tokenizer, model, vision_tower = init_SESAME_model(args, model_args)
+    tokenizer, model, vision_tower = init_LISAT_model(args, model_args)
 
     state_dict = torch.load(args.weight, map_location="cpu")
     model.load_state_dict(state_dict, strict=True)

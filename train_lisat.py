@@ -1,15 +1,17 @@
+# Launch flash attention (optional)
+
 #from model.llava.train.llama_flash_attn_monkey_patch import (
 #    replace_llama_attn_with_flash_attn,
 #)
 
 #replace_llama_attn_with_flash_attn()
 
+
 import argparse
 import os
 import shutil
 import sys
 from functools import partial
-
 import deepspeed
 import torch
 import tqdm
@@ -17,130 +19,98 @@ import wandb
 import json
 from PIL import Image
 
-from model.SESAME import init_SESAME_model
+# Model & Data
+from model.LISAT import init_LISAT_model
 from model.llava import conversation as conversation_lib
-from dataloaders.trainval_dataset import HybridDataset, TrainValDataset, ReasonSegDataset, collate_fn_train, collate_fn_val
+from dataloaders.trainval_dataset import (
+    HybridDataset, ReasonSegDataset,
+    collate_fn_train, collate_fn_val
+)
 from dataloaders.utils import replace_image_tokens, tokenize_and_pad
 from dataloaders.base_dataset import ImageProcessor
 from model.llava.constants import DEFAULT_IMAGE_TOKEN
 
+# Utils
 from utils import (
-    AverageMeter,
-    ProgressMeter,
-    Summary,
-    prepare_input,
-    intersectionAndUnionGPU,
+    AverageMeter, ProgressMeter, Summary,
+    prepare_input, intersectionAndUnionGPU,
 )
 
-# ====== PYCOCO BLEU EVALUATION (from eval_bleu.py) ====== #
+# BLEU scoring
 from pycocoevalcap.bleu.bleu import Bleu
 
 
 def parse_args(args):
-    parser = argparse.ArgumentParser(description="LISAT Model Training")
-    parser.add_argument("--local_rank", default=0, type=int, help="node rank")
-    parser.add_argument(
-        "--version", default="/home/patrickwu/Geo-LLaVA/checkpoints/llava-v1.5-7b-geollava_remoteclip_merged"
-    )
-    parser.add_argument(
-        "--precision",
-        default="bf16",
-        type=str,
-        choices=["fp32", "bf16", "fp16"],
-        help="precision for inference",
-    )
-    parser.add_argument("--image_size", default=1024, type=int, help="image size")
-    parser.add_argument("--model_max_length", default=1024, type=int)
-    parser.add_argument("--lora_r", default=8, type=int)
-    parser.add_argument(
-        "--vision-tower", default="/home/patrickwu/Geo-LLaVA/scripts/remote_clip_vit_l_14", type=str
-    )
-    parser.add_argument("--load_in_8bit", action="store_true", default=False)
-    parser.add_argument("--load_in_4bit", action="store_true", default=False)
+    """Define and parse training arguments."""
+    parser = argparse.ArgumentParser(description="Train LISAT Model")
 
-    parser.add_argument("--dataset", default="refer_seg||correct_refer_seg||vqa||neg_refer_seg", type=str)
-    parser.add_argument("--sample_rates", default="9,3,3", type=str)
-    parser.add_argument(
-        "--sem_seg_data",
-        default="ade20k||cocostuff||pascal_part||paco_lvis",
-        type=str,
-    )
-    parser.add_argument(
-        "--refer_seg_data", default="refclef||refcoco||refcoco+||refcocog", type=str
-    )
-    parser.add_argument(
-        "--neg_refer_seg_data", default="R-refcocog||R-refcoco||R-refcoco+", type=str
-    )
-    parser.add_argument(
-        "--correct_refer_seg_data",
-        default="fprefcocog||fprefcoco||fprefcoco+",
-        type=str,
-    )
-    parser.add_argument("--vqa_data", default="llava_instruct_150k", type=str)
-    parser.add_argument("--reason_seg_data", default="ReasonSeg|train", type=str)
-    parser.add_argument("--geo_reason_seg_data", default="GeoReasonSeg|train", type=str)
-    parser.add_argument("--dataset_dir", default="./dataset", type=str)
-    parser.add_argument("--log_base_dir", default="./runs", type=str)
-    parser.add_argument("--exp_name", default="LIST_PREGRES", type=str)
-    parser.add_argument("--epochs", default=60, type=int)
-    parser.add_argument("--steps_per_epoch", default=500, type=int)
-    parser.add_argument(
-        "--batch_size", default=12, type=int, help="batch size per device per step"
-    )
-    parser.add_argument(
-        "--grad_accumulation_steps",
-        default=1,
-        type=int,
-    )
-    parser.add_argument("--val_batch_size", default=1, type=int)
-    parser.add_argument("--workers", default=4, type=int)
-    parser.add_argument("--lr", default=0.0003, type=float)
-    parser.add_argument("--ce_loss_weight", default=1.0, type=float)
-    parser.add_argument("--dice_loss_weight", default=0.5, type=float)
-    parser.add_argument("--bce_loss_weight", default=2.0, type=float)
-    parser.add_argument("--lora_alpha", default=16, type=int)
-    parser.add_argument("--lora_dropout", default=0.05, type=float)
-    parser.add_argument("--lora_target_modules", default="q_proj,v_proj", type=str)
-    parser.add_argument("--beta1", default=0.9, type=float)
-    parser.add_argument("--beta2", default=0.95, type=float)
-    parser.add_argument("--num_classes_per_sample", default=1, type=int)
-    parser.add_argument("--no_eval", action="store_true", default=False)
-    parser.add_argument("--eval_only", action="store_true", default=False)
-    parser.add_argument("--vision_pretrained", default="PATH_TO_SAM_ViT-H", type=str)
-    parser.add_argument("--out_dim", default=256, type=int)
-    parser.add_argument("--resume", default="", type=str)
-    parser.add_argument("--print_freq", default=3, type=int)
-    parser.add_argument("--start_epoch", default=0, type=int)
+    # Model paths
+    parser.add_argument("--version", default="./checkpoints/llava-v1.5-7b-geollava_remoteclip_merged")
+    parser.add_argument("--vision-tower", default="./scripts/remote_clip_vit_l_14")
+
+    # Precision settings
+    parser.add_argument("--precision", choices=["fp32", "bf16", "fp16"], default="bf16")
+    parser.add_argument("--load_in_8bit", action="store_true")
+    parser.add_argument("--load_in_4bit", action="store_true")
+
+    # Image and input settings
+    parser.add_argument("--image_size", type=int, default=1024)
+    parser.add_argument("--model_max_length", type=int, default=1024)
+
+    # Dataset and training configuration
+    parser.add_argument("--dataset", default="refer_seg||correct_refer_seg||vqa||neg_refer_seg")
+    parser.add_argument("--sample_rates", default="9,3,3")
+    parser.add_argument("--sem_seg_data", default="ade20k||cocostuff||pascal_part||paco_lvis")
+    parser.add_argument("--refer_seg_data", default="refclef||refcoco||refcoco+||refcocog")
+    parser.add_argument("--neg_refer_seg_data", default="R-refcocog||R-refcoco||R-refcoco+")
+    parser.add_argument("--correct_refer_seg_data", default="fprefcocog||fprefcoco||fprefcoco+")
+    parser.add_argument("--vqa_data", default="llava_instruct_150k")
+    parser.add_argument("--reason_seg_data", default="ReasonSeg|train")
+    parser.add_argument("--geo_reason_seg_data", default="GeoReasonSeg|train")
+
+    # Directories
+    parser.add_argument("--dataset_dir", default="./dataset")
+    parser.add_argument("--log_base_dir", default="./runs")
+    parser.add_argument("--exp_name", default="LISAT")
+
+    # Training hyperparameters
+    parser.add_argument("--epochs", type=int, default=60)
+    parser.add_argument("--steps_per_epoch", type=int, default=500)
+    parser.add_argument("--batch_size", type=int, default=12)
+    parser.add_argument("--val_batch_size", type=int, default=1)
+    parser.add_argument("--grad_accumulation_steps", type=int, default=1)
+    parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--lr", type=float, default=0.0003)
+    parser.add_argument("--ce_loss_weight", type=float, default=1.0)
+    parser.add_argument("--dice_loss_weight", type=float, default=0.5)
+    parser.add_argument("--bce_loss_weight", type=float, default=2.0)
+    parser.add_argument("--lora_r", type=int, default=8)
+    parser.add_argument("--lora_alpha", type=int, default=16)
+    parser.add_argument("--lora_dropout", type=float, default=0.05)
+    parser.add_argument("--lora_target_modules", default="q_proj,v_proj")
+    parser.add_argument("--beta1", type=float, default=0.9)
+    parser.add_argument("--beta2", type=float, default=0.95)
+    parser.add_argument("--num_classes_per_sample", type=int, default=1)
+
+    # Training control
+    parser.add_argument("--no_eval", action="store_true")
+    parser.add_argument("--eval_only", action="store_true")
+    parser.add_argument("--resume", default="")
+    parser.add_argument("--start_epoch", type=int, default=0)
+    parser.add_argument("--print_freq", type=int, default=3)
     parser.add_argument("--gradient_checkpointing", action="store_true", default=True)
     parser.add_argument("--train_mask_decoder", action="store_true", default=True)
     parser.add_argument("--use_mm_start_end", action="store_true", default=True)
     parser.add_argument("--auto_resume", action="store_true", default=True)
-    parser.add_argument(
-        "--conv_type",
-        default="llava_v1",
-        type=str,
-        choices=["llava_v1", "llava_llama_2"],
-    )
+    parser.add_argument("--local_rank", type=int, default=0)
+    parser.add_argument("--conv_type", choices=["llava_v1", "llava_llama_2"], default="llava_v1")
+    parser.add_argument("--vision_pretrained", default="PATH_TO_SAM_ViT-H")
+    parser.add_argument("--out_dim", type=int, default=256)
 
-    # ----- New arguments for multiple VQA files -----
-    parser.add_argument(
-        "--vqa_eval_file_nwpu",
-        default="/home/wenhan/Projects/sesame/vqa/NWPU-Captions.jsonl",
-        type=str,
-        help="Path to the NWPU-Captions VQA eval file",
-    )
-    parser.add_argument(
-        "--vqa_eval_file_sydney",
-        default="/home/wenhan/Projects/sesame/vqa/Sydney-Captions.jsonl",
-        type=str,
-        help="Path to the Sydney Captions VQA eval file",
-    )
-    parser.add_argument(
-        "--vqa_eval_file_ucm",
-        default="/home/wenhan/Projects/sesame/vqa/UCM-Captions.jsonl",
-        type=str,
-        help="Path to the UCM-Captions VQA eval file",
-    )
+    # Eval VQA captioning files
+    parser.add_argument("--vqa_eval_file_nwpu", default="./vqa/NWPU-Captions.jsonl")
+    parser.add_argument("--vqa_eval_file_sydney", default="./vqa/Sydney-Captions.jsonl")
+    parser.add_argument("--vqa_eval_file_ucm", default="./vqa/UCM-Captions.jsonl")
 
     return parser.parse_args(args)
 
@@ -151,7 +121,7 @@ def main(args):
 
     if args.local_rank == 0:
         os.makedirs(args.log_dir, exist_ok=True)
-        wandb.init(project="sesame", name=args.exp_name)
+        wandb.init(project="lisat", name=args.exp_name)
 
     # ---- Init conversation template ----
     conversation_lib.default_conversation = conversation_lib.conv_templates[args.conv_type]
@@ -166,7 +136,7 @@ def main(args):
         "vision_pretrained": args.vision_pretrained,
         "use_mm_start_end": args.use_mm_start_end,
     }
-    tokenizer, model, vision_tower = init_SESAME_model(args, model_args)
+    tokenizer, model, vision_tower = init_LISAT_model(args, model_args)
 
     # Setup DDP
     world_size = torch.cuda.device_count()
@@ -340,9 +310,9 @@ def main(args):
         # Compute new best_score formula
         combined_metric = (
             (nwpu_bleu4 / 65.8)
-        #    + (sydney_bleu4 / 62.23)
-        #    + (ucm_bleu4 / 72.34)
-        #    + (giou / 0.275)
+            + (sydney_bleu4 / 62.23)
+            + (ucm_bleu4 / 72.34)
+            + (giou / 0.275)
         )
 
         print(
@@ -415,9 +385,9 @@ def main(args):
             # Compute the new combined metric (best_score formula)
             combined_metric = (
                 (nwpu_bleu4 / 65.8)
-            #    + (sydney_bleu4 / 62.23)
-            #    + (ucm_bleu4 / 72.34)
-            #    + (giou / 0.275)
+                + (sydney_bleu4 / 62.23)
+                + (ucm_bleu4 / 72.34)
+                + (giou / 0.275)
             )
 
             # Check and save if best
