@@ -57,6 +57,7 @@ conda activate lisat
 
 # Step 2: Install dependencies
 pip install pybind11==2.11.1
+# install torch, torchvision as best fit for your system
 pip install -r requirements.txt
 pip install flash-attn --no-build-isolation  # Required for FlashAttention
 ```

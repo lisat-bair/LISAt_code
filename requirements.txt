@@ -13,9 +13,7 @@ pillow==11.0.0
 pandas==2.2.3
 matplotlib==3.9.2
 
-# === PyTorch + Deepspeed ===
-torch==2.0.1+cu117
-torchvision==0.15.2+cu117
+# === Deepspeed ===
 deepspeed==0.10.3
 
 # === Hugging Face Transformers Ecosystem ===
@@ -44,9 +42,6 @@ requests==2.32.3
 # === Optional: Jupyter-friendly dependencies ===
 # jupyter
 # ipywidgets
-
-# === Optional: FlashAttention (used in LISAT) ===
-flash-attn==2.6.3
 
 # === Others used in utils/image processing ===
 imageio==2.36.0
