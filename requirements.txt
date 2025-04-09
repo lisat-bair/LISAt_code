@@ -33,7 +33,7 @@ nltk==3.9.1
 rouge-score==0.1.2
 evaluate==0.4.3
 pycocoevalcap==1.2
-pycocotools @ git+https://github.com/GiscardBiamby/cocobetter.git#egg=pycocotools&subdirectory=PythonAPI
+pycocotools==2.0.7
 
 # === Logging & Utilities ===
 wandb==0.16.4
