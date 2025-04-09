@@ -67,7 +67,7 @@ pip install flash-attn --no-build-isolation  # Required for FlashAttention
 Ensure the following directories exist:
 
 ```
-./dataset/                          # All image datasets
+./dataset/                          # # 
 ./vqa_caption_ans/                 # Captioning ground truths
 ./captioning_dir/                  # LISAT model predictions
 ./eval_lisat_pre/pycocoevalcap/    # Captioning evaluation metrics
