@@ -496,7 +496,7 @@ def init_LISAT_model(args, model_args):
     model.get_model().initialize_vision_modules(model.get_model().config)
     vision_tower = model.get_model().get_vision_tower()
     vision_tower.to(dtype=torch_dtype, device=args.local_rank)
-    model.get_model().initialize_lisa_modules(model.get_model().config)
+    model.get_model().initialize_lisat_modules(model.get_model().config)
 
     for p in vision_tower.parameters():
         p.requires_grad = False
