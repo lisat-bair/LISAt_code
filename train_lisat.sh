@@ -3,10 +3,8 @@
 # Assume we use 8 GPUs
 
 # Parameters
-# VERSION="./LISAt-7b"
-VERSION="/home/wenhan/Projects/sesame/llava-v1.5-7b-geollava_remoteclip_merged"
-# DATASET_DIR="./dataset"
-DATASET_DIR="/home/wenhan/Projects/sesame/dataset"
+VERSION="./LISAt-7b"
+DATASET_DIR="./dataset"
 EXP_NAME="lisat"
 BATCH_SIZE=3
 GRAD_ACCUMULATION_STEPS=4

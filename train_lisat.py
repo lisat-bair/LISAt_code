@@ -46,8 +46,7 @@ def parse_args(args):
 
     # Model paths
     parser.add_argument("--version", default="./LISAt-7b")
-    # parser.add_argument("--vision-tower", default="./remote_clip_vit_l_14")
-    parser.add_argument("--vision-tower", default="/home/wenhan/Projects/sesame/remote_clip_vit_l_14")
+    parser.add_argument("--vision-tower", default="./remote_clip_vit_l_14")
     # Precision settings
     parser.add_argument("--precision", choices=["fp32", "bf16", "fp16"], default="bf16")
     parser.add_argument("--load_in_8bit", action="store_true")
