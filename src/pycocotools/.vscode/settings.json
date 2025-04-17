@@ -1,0 +1,87 @@
+{
+    "cSpell.words": [
+        "some_new_word",
+    ],
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.fixAll.shellcheck": true,
+        "source.organizeImports": true
+    },
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.formatOnSave": true,
+    "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "all",
+    "editor.wordWrapColumn": 100,
+    "files.exclude": {
+        "**/*.pyc": true,
+        "**/.DS_Store": true,
+        "**/.git": true,
+        "**/.pytest_cache": true,
+        "**/XDG_CACHE_HOME": true,
+        "**/__pycache__/**": true
+    },
+    "jupyter.allowUnauthorizedRemoteConnection": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.defaultInterpreterPath": "~/anaconda3/envs/coco/bin/python",
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.formatting.autopep8Args": [
+        "--global-config=${workspaceFolder}/setup.cfg",
+        "--experimental"
+    ],
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "100"
+    ],
+    "python.formatting.provider": "black",
+    "python.linting.enabled": true,
+    "python.linting.flake8Args": [
+        "--verbose"
+    ],
+    "python.linting.flake8Enabled": true,
+    "python.linting.pylintArgs": [
+        "--generated-members=numpy.* ,torch.* ,cv2.* , cv.*"
+    ],
+    "python.linting.pylintEnabled": false,
+    "python.sortImports.path": "isort",
+    // No need to use this becauase the settings in setup.cfg configure isort to be compatible with black:
+    // "python.sortImports.args": [
+    //     "--profile",
+    //     "black",
+    // ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": false,
+    "rewrap.wrappingColumn": 100,
+    "shellcheck.customArgs": [
+        "--source-path=SCRIPTDIR",
+        "--external-sources"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ],
+    "spellright.language": [
+        "en_US"
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#ff6433",
+        "activityBar.background": "#ff6433",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#00ff3d",
+        "activityBarBadge.foreground": "#15202b",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#ff6433",
+        "statusBar.background": "#ff3d00",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#ff6433",
+        "statusBarItem.remoteBackground": "#ff3d00",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#ff3d00",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#ff3d0099",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.remoteColor": "#ff3d00"
+}

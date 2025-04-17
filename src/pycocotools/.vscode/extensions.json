@@ -1,0 +1,37 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+    // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+    // List of extensions which should be recommended for users of this workspace.
+    "recommendations": [
+        "aaron-bond.better-comments",
+        "christian-kohler.path-intellisense",
+        "codezombiech.gitignore",
+        "DavidAnson.vscode-markdownlint",
+        "donjayamanne.githistory",
+        "foxundermoon.shell-format",
+        "Gruntfuggly.todo-tree",
+        "mechatroner.rainbow-csv",
+        "mgesbert.python-path",
+        "mhutchie.git-graph",
+        "mohsen1.prettify-json",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "njpwerner.autodocstring",
+        "oderwat.indent-rainbow",
+        "quilicicf.markdown-spec-formatter",
+        "richie5um2.vscode-sort-json",
+        "ryu1kn.partial-diff",
+        "shardulm94.trailing-spaces",
+        "spikespaz.vscode-smoothtype",
+        "stkb.rewrap",
+        "streetsidesoftware.code-spell-checker",
+        "stuart.unique-window-colors",
+        "vikas.code-navigation",
+    ],
+    // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
+    "unwantedRecommendations": [
+        "felipecaputo.git-project-manager",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github"
+    ]
+}
