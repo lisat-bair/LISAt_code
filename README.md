@@ -10,13 +10,13 @@ This repository provides the official PyTorch source code for our paper:
 
 ---
 
-## 🚀 Introduction
+## Introduction
 
 Reading satellite images isn't just about identifying objects—it's about understanding their **context**, **relationships**, and sometimes even the **absurdity** of what humans ask AI to locate.
 
 Enter **LISAT**, your AI-powered geospatial detective, trained to not only recognize but also **reason** about objects in satellite imagery. Whether it’s detecting urban expansion or identifying a suspiciously duck-shaped lake, LISAT delivers intelligent, nuanced segmentation and captioning from satellite views.
 
-### 🔍 Trained on Two New Datasets:
+### Trained on Two New Datasets:
 - **GRES** (Geospatial Reasoning Segmentation):  
   27,615 segmentation annotations over 9,205 images.  
   - 🤗 [Download on Hugging Face](https://huggingface.co/datasets/jquenum/GRES/blob/main/README.md)  
@@ -35,15 +35,15 @@ Enter **LISAT**, your AI-powered geospatial detective, trained to not only recog
 
 ---
 
-## 📌 Status Update
+## Status Update
 
-- **✅ 2025-03-22**: Released training, evaluation, demo scripts, pretrained checkpoints, and full datasets.
+- **2025-03-22**: Released training, evaluation, demo scripts, pretrained checkpoints, and full datasets.
 
 ---
 
 ## 🛠 Installation Guide
 
-### ✅ System Requirements
+### System Requirements
 - **OS**: Linux
 - **GPU**: NVIDIA A100 recommended (for FlashAttention)
 - **Python**: 3.9
@@ -65,8 +65,8 @@ pip install flash-attn --no-build-isolation  # Required for FlashAttention
 # install https://pypi.org/project/pycocoevalcap/
 ```
 
-## 📁 Model & Dataset Release
-### 🧠 LISAT Models on Hugging Face
+## Model & Dataset Release
+### LISAT Models on Hugging Face
 LISAT-7B is specifically trained for geospatial reasoning segmentation tasks. Below are gIoU & cIoU score of LISAT-7B.
 
 | Model Name | LMM | HG-ckpt URL | gIoU | cIoU  |
@@ -81,7 +81,7 @@ LISAT_PRE-7B is specifically trained for geospatial image-captioning & visual qu
 
 RemoteCLIP is required for both LISAT-7B, LISAT_PRE-7B: [wen-han/remote_clip_vit_l_14](https://huggingface.co/wen-han/remote_clip_vit_l_14)
 
-### 📦 Datasets
+### Datasets
 Visit our [Dataset page](./dataset/README.md) for more details.
 - [📘 GRES Dataset on GitHub](https://github.com/lisat-bair/GRES)  
 - [📘 GRES Dataset on Hugging Face](https://huggingface.co/datasets/jquenum/GRES/blob/main/README.md)
