@@ -143,13 +143,12 @@ We thank the open-source community for their contributions.
 
 ## 🎯 Citation
 
-If you use LISAT, its datasets, or any part of this repository in your work, please consider citing our paper:
+If you use LISAT, its datasets, or any part of this repository in your work, please consider citing our [paper](https://arxiv.org/pdf/2505.02829):
 
-```
-@article{wenhan2025lisat,
+```bibtex
+@article{quenum2025lisat,
   title={LISAT: Language-Instructed Segmentation Assistant for Satellite Imagery},
   author={Quenum, Jerome and Hsieh, Wen-Han and Wu, Tsung-Han and Gupta, Ritwik and Darrell, Trevor and Chan, David M},
-  journal={TBD},
+  journal={arXiv preprint arXiv:2505.02829},
   year={2025}
 }
-```
