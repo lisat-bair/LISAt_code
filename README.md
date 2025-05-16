@@ -19,13 +19,13 @@ Enter **LISAT**, your AI-powered geospatial detective, trained to not only recog
 ### Trained on Two New Datasets:
 - **GRES** (Geospatial Reasoning Segmentation):  
   27,615 segmentation annotations over 9,205 images.  
-  - 🤗 [Download on Hugging Face](https://huggingface.co/datasets/jquenum/GRES/blob/main/README.md)  
-  - 💻 [GitHub Repo](https://github.com/lisat-bair/GRES)
+  - [Download on Hugging Face](https://huggingface.co/datasets/jquenum/GRES/blob/main/README.md)  
+  - [GitHub Repo](https://github.com/lisat-bair/GRES)
 
 - **PreGRES**:  
   A large-scale multimodal pretraining dataset with over **1 million QA pairs** grounded in satellite imagery.
 
-📈 LISAT outperforms prior models like RS-GPT4V with:
+LISAT outperforms prior models like RS-GPT4V with:
 - **+10.04%** improvement in BLEU-4 (image captioning)
 - **+143.36%** improvement in gIoU (segmentation)
 
@@ -41,7 +41,7 @@ Enter **LISAT**, your AI-powered geospatial detective, trained to not only recog
 
 ---
 
-## 🛠 Installation Guide
+## Installation Guide
 
 ### System Requirements
 - **OS**: Linux
@@ -83,12 +83,12 @@ RemoteCLIP is required for both LISAT-7B, LISAT_PRE-7B: [wen-han/remote_clip_vit
 
 ### Datasets
 Visit our [Dataset page](./dataset/README.md) for more details.
-- [📘 GRES Dataset on GitHub](https://github.com/lisat-bair/GRES)  
-- [📘 GRES Dataset on Hugging Face](https://huggingface.co/datasets/jquenum/GRES/blob/main/README.md)
+- [GRES Dataset on GitHub](https://github.com/lisat-bair/GRES)  
+- [GRES Dataset on Hugging Face](https://huggingface.co/datasets/jquenum/GRES/blob/main/README.md)
 
 ---
 
-## 🏋️‍♂️ Training
+## Training
 
 ```bash
 bash train_lisat.sh [ReferSeg or ReasonSeg] [Deepspeed GPU Settings] [MASTERPORT]
@@ -99,7 +99,7 @@ bash train_lisat.sh ReasonSeg localhost:0,1 15990
 
 ---
 
-## 🔄 Merge LoRA Weights
+## Merge LoRA Weights
 
 ```bash
 bash merge_lora_weight.sh
@@ -107,7 +107,7 @@ bash merge_lora_weight.sh
 
 ---
 
-## 📊 Evaluation
+## Evaluation
 
 ### Geospatial Segmentation Evaluation (gIoU, cIoU):
 
@@ -130,7 +130,7 @@ bash eval_captioning.sh
 
 ---
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
 LISAT builds upon foundational work from:
 
@@ -139,9 +139,9 @@ LISAT builds upon foundational work from:
 - [LLaVA](https://github.com/haotian-liu/LLaVA)  
 - [SAM (Segment Anything)](https://github.com/facebookresearch/segment-anything)
 
-We thank the open-source community for their contributions.
+We thank the open-source community for its contributions.
 
-## 🎯 Citation
+## Citation
 
 If you use LISAT, its datasets, or any part of this repository in your work, please consider citing our [paper](https://arxiv.org/pdf/2505.02829):
 
