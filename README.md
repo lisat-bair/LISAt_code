@@ -5,7 +5,7 @@ This repository provides the official PyTorch source code for our paper:
 🔗 Project page: [https://lisat-bair.github.io/LISAt/](https://lisat-bair.github.io/LISAt/)
 
 **Authors**:  
-[Jerome Quenum*](https://people.eecs.berkeley.edu/~jquenum/), [Wen-Han Hsieh*](https://wen-hanhsieh.github.io/personal_website/), [Tsung-Han Wu](https://tsunghan-wu.github.io/), [Ritwik Gupta](https://ritwikgupta.me/), [Trevor Darrell](https://people.eecs.berkeley.edu/~trevor/), [David M. Chan](https://dchan.cc/)  
+[Jerome Quenum*](https://jquenum.github.io/), [Wen-Han Hsieh*](https://wen-hanhsieh.github.io/personal_website/), [Tsung-Han Wu](https://tsunghan-wu.github.io/), [Ritwik Gupta](https://ritwikgupta.me/), [Trevor Darrell](https://people.eecs.berkeley.edu/~trevor/), [David M. Chan](https://dchan.cc/)  
 (* equal contribution, UC Berkeley)
 
 ---
